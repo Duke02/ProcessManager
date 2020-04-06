@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace ProcessManager
@@ -21,6 +22,11 @@ namespace ProcessManager
         private static int _lastId = 0;
 
         /// <summary>
+        /// Field that holds the tabs to print debug information in a nicely formatted way.
+        /// </summary>
+        private readonly string _tabs;
+
+        /// <summary>
         /// Creates the processor with the given parameters.
         /// </summary>
         /// <param name="dispatcher">The algorithm this processor will use to choose the next process to run.</param>
@@ -32,6 +38,10 @@ namespace ProcessManager
 
             ProcessorId = _lastId;
             _lastId++;
+
+            var tabsBuilder = new StringBuilder();
+            tabsBuilder.Append('\t', ProcessorId + 1);
+            _tabs = tabsBuilder.ToString();
 
             LocalQueue = new ConcurrentQueue<Process>();
             CurrentClockCycle = 0;
@@ -119,7 +129,7 @@ namespace ProcessManager
         /// <param name="message">The message to print to the console.</param>
         private void PrintInformation(string message)
         {
-            Console.WriteLine($"Processor {ProcessorId} @ Cycle {CurrentClockCycle}: {message}");
+            Console.WriteLine($"{_tabs}Processor {ProcessorId} @ Cycle {CurrentClockCycle}: {message}");
         }
 
         /// <summary>
@@ -141,6 +151,7 @@ namespace ProcessManager
 
             if (IsIdling)
             {
+                PrintInformation("Idling...");
                 CurrentlyRunningProcess = Dispatcher.Dispatch(this, GetAppropriateQueue());
             }
 
