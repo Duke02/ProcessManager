@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 
 namespace ProcessManager
@@ -25,5 +26,11 @@ namespace ProcessManager
         /// <param name="processQueue">The queue to select the next process from.</param>
         /// <returns>The process that is to run next.</returns>
         Process Dispatch(Processor processor, ConcurrentQueue<Process> processQueue);
+
+        /// <summary>
+        /// Gets how the queue is supposed to be ordered in the system/processor.
+        /// </summary>
+        /// <returns>A lambda that specifies how the queue is supposed to be ordered.</returns>
+        Func<Process, object> GetQueueOrder();
     }
 }

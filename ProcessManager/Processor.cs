@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 
 namespace ProcessManager
@@ -42,7 +43,7 @@ namespace ProcessManager
         /// <summary>
         /// The local queue of ready processes that this processor can select from to run.
         /// </summary>
-        public ConcurrentQueue<Process> LocalQueue { get; }
+        public ConcurrentQueue<Process> LocalQueue { get; private set; }
 
         /// <summary>
         /// The currently running process on this processor.
@@ -74,6 +75,21 @@ namespace ProcessManager
             // If we decide to make this use the system queue,
             // this is what we will change.
             return LocalQueue;
+        }
+
+        /// <summary>
+        /// Adds to the queue and orders it.
+        /// </summary>
+        /// <param name="process">The process to be added to the queue.</param>
+        public void AddToLocalQueue(Process process)
+        {
+            LocalQueue.Enqueue(process);
+            SortTheQueue();
+        }
+
+        public void SortTheQueue()
+        {
+            LocalQueue = new ConcurrentQueue<Process>(LocalQueue.OrderBy(Dispatcher.GetQueueOrder()));
         }
 
         /// <summary>

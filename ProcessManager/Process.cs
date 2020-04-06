@@ -16,10 +16,12 @@ namespace ProcessManager
         /// </summary>
         /// <param name="requiredCycles">The number of clock cycles this process requires to complete.</param>
         /// <param name="priority">The priority of this process.</param>
-        public Process(int requiredCycles, int priority)
+        /// <param name="currentClockCycle">The current clock cycle of the processor.</param>
+        public Process(int requiredCycles, int priority, int currentClockCycle)
         {
             RequiredCycles = requiredCycles;
             Priority = priority;
+            AdmittedClockCycle = currentClockCycle;
 
             ProcessId = _lastProcessId;
             _lastProcessId++;
@@ -75,6 +77,11 @@ namespace ProcessManager
         /// The total number of clock cycles this process has been executing since it first started running.
         /// </summary>
         public int TotalExecution { get; private set; }
+
+        /// <summary>
+        /// The clock cycle this process was admitted into the system.
+        /// </summary>
+        public int AdmittedClockCycle { get; }
 
         /// <summary>
         /// True if the process has began execution, false otherwise.
