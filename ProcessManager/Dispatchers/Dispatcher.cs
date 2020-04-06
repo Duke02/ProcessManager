@@ -32,5 +32,10 @@ namespace ProcessManager.Dispatchers
         /// </summary>
         /// <returns>A lambda that specifies how the queue is supposed to be ordered.</returns>
         Func<Process, object> GetQueueOrder();
+
+        /// <summary>
+        /// Optional update on clock cycle for internal data.
+        /// </summary>
+        void UpdateOnClockCycle();
     }
 }

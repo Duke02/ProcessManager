@@ -40,5 +40,9 @@ namespace ProcessManager.Dispatchers
         {
             return process => process.AdmittedClockCycle;
         }
+
+        public void UpdateOnClockCycle()
+        {
+        }
     }
 }

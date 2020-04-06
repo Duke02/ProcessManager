@@ -111,8 +111,9 @@ namespace ProcessManager
         public bool Run(int currentClockCycle)
         {
             PrintInformation($"Running at clock cycle {currentClockCycle}");
+
             if (BeganExecution)
-                TotalWait += currentClockCycle - LastExecutionCycle;
+                TotalWait += currentClockCycle - LastExecutionCycle - 1;
             else
                 ExecutionStart = currentClockCycle;
 
@@ -131,8 +132,9 @@ namespace ProcessManager
         /// <param name="normalizedTurnAroundTime">turnAroundTime / Service time</param>
         public void CalculateStatistics(out int turnAroundTime, out double normalizedTurnAroundTime)
         {
-            turnAroundTime = ExecutionEnd - ExecutionStart;
-            normalizedTurnAroundTime = turnAroundTime / (float) RequiredCycles;
+            var test = TotalExecution + TotalWait;
+            turnAroundTime = ExecutionEnd - AdmittedClockCycle + 1;
+            normalizedTurnAroundTime = turnAroundTime / (double) RequiredCycles;
         }
 
         public void CalculateStatistics(out ProcessStatistics statistics)

@@ -170,6 +170,7 @@ namespace ProcessManager
         {
             PrintInformation("Beginning cycle.");
 
+
             if (Dispatcher.IsPreemptive() && Dispatcher.ShouldPreempt(this, _system))
             {
                 // TODO: Make sure this doesn't make the enqueued process null again.
@@ -190,6 +191,8 @@ namespace ProcessManager
 
 
             var processHasCompleted = CurrentlyRunningProcess != null && CurrentlyRunningProcess.Run(CurrentClockCycle);
+
+            Dispatcher.UpdateOnClockCycle();
 
 
             if (processHasCompleted)

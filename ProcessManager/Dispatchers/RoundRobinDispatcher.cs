@@ -39,7 +39,8 @@ namespace ProcessManager.Dispatchers
                 processQueue.TryDequeue(out result);
 
                 // If we just took the last process in the queue, let it be our output.
-                if (processQueue.IsEmpty) break;
+                if (processQueue.IsEmpty)
+                    break;
 
                 // If we got the same process, just throw it back in there.
                 if (result != null && result.ProcessId == _currentRunningPid) processQueue.Enqueue(result);
@@ -54,6 +55,11 @@ namespace ProcessManager.Dispatchers
         public Func<Process, object> GetQueueOrder()
         {
             return process => process.AdmittedClockCycle;
+        }
+
+        public void UpdateOnClockCycle()
+        {
+            _runningStreak++;
         }
     }
 }
