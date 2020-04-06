@@ -100,7 +100,7 @@ namespace ProcessManager
 
             TurnOn();
 
-            while (Processors.Any(processor => !processor.LocalQueue.IsEmpty))
+            while (Processors.Any(processor => !processor.IsDone))
             {
                 Thread.Sleep(Constants.ClockPeriod);
             }

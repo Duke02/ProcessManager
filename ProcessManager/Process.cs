@@ -26,7 +26,7 @@ namespace ProcessManager
             ProcessId = _lastProcessId;
             _lastProcessId++;
 
-            ExecutionStart = -1;
+            _executionStart = -1;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace ProcessManager
             get => _executionStart;
             private set
             {
-                if (_executionStart != default(int))
+                if (_executionStart != -1)
                 {
                     Console.WriteLine(
                         $"WARNING: Process {ProcessId} has started execution more than once when it shouldn't have.");
@@ -98,6 +98,11 @@ namespace ProcessManager
         /// </summary>
         public int LastExecutionCycle { get; private set; }
 
+        private void PrintInformation(string message)
+        {
+            Console.WriteLine($"Process {ProcessId}: {message}");
+        }
+
         /// <summary>
         /// Runs the process.
         /// </summary>
@@ -105,6 +110,7 @@ namespace ProcessManager
         /// <returns>True if the process completed, false otherwise.</returns>
         public bool Run(int currentClockCycle)
         {
+            PrintInformation($"Running at clock cycle {currentClockCycle}");
             if (BeganExecution)
             {
                 TotalWait += currentClockCycle - LastExecutionCycle;

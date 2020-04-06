@@ -65,6 +65,8 @@ namespace ProcessManager
         /// </summary>
         public int CurrentClockCycle { get; private set; }
 
+        public bool IsDone => GetAppropriateQueue().IsEmpty && IsIdling;
+
         /// <summary>
         /// Gets the queue that new processes are to come from.
         /// </summary>

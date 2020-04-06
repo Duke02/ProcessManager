@@ -18,8 +18,8 @@ namespace ProcessManager
 
         public Process Dispatch(Processor processor, ConcurrentQueue<Process> processQueue)
         {
-            var queue = new ConcurrentQueue<Process>(processQueue.OrderBy(GetQueueOrder()));
-            queue.TryDequeue(out var result);
+            processor.SortTheQueue();
+            processor.LocalQueue.TryDequeue(out var result);
             return result;
         }
 
