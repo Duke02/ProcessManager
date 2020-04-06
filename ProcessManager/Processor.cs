@@ -77,6 +77,9 @@ namespace ProcessManager
         /// </summary>
         public int CurrentClockCycle { get; private set; }
 
+        /// <summary>
+        /// True if the queue is empty and the processor is idling, False otherwise.
+        /// </summary>
         public bool IsDone => GetAppropriateQueue().IsEmpty && IsIdling;
 
         /// <summary>

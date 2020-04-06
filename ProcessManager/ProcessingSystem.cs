@@ -37,6 +37,9 @@ namespace ProcessManager
             GlobalQueue = new ConcurrentQueue<Process>();
         }
 
+        /// <summary>
+        /// The object that produces processes throughout the system.
+        /// </summary>
         public Producer ProcessProducer { get; }
 
         /// <summary>
@@ -94,6 +97,10 @@ namespace ProcessManager
             Console.WriteLine("System is off.");
         }
 
+        /// <summary>
+        /// Adds processes to each producer by at most the given amount.
+        /// </summary>
+        /// <param name="numToAddPerProcessor">The maximum number of processes to allot to each processor.</param>
         private void AddProcessesToProcessors(int numToAddPerProcessor)
         {
             foreach (var processor in Processors)
@@ -114,6 +121,9 @@ namespace ProcessManager
             }
         }
 
+        /// <summary>
+        /// Simulates a real world computing environment.
+        /// </summary>
         public void Simulate()
         {
             Console.WriteLine("Beginning simulation.");

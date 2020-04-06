@@ -95,6 +95,10 @@ namespace ProcessManager
         /// </summary>
         public int LastExecutionCycle { get; private set; }
 
+        /// <summary>
+        /// Prints debug information for this process.
+        /// </summary>
+        /// <param name="message">The message to print.</param>
         private void PrintInformation(string message)
         {
             Console.WriteLine($"Process {ProcessId}: {message}");
