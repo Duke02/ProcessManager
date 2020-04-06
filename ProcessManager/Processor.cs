@@ -76,11 +76,18 @@ namespace ProcessManager
             return LocalQueue;
         }
 
+        /// <summary>
+        /// Prints a message to the console using the given message.
+        /// </summary>
+        /// <param name="message">The message to print to the console.</param>
         private void PrintInformation(string message)
         {
             Console.WriteLine($"{DateTime.Now}|Processor {ProcessorId}: {message}");
         }
 
+        /// <summary>
+        /// Gets the process to run and allows it to run.
+        /// </summary>
         public void Process()
         {
             if (Dispatcher.IsPreemptive() && Dispatcher.ShouldPreempt(this, _system))

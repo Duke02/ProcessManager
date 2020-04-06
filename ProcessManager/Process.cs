@@ -11,6 +11,11 @@ namespace ProcessManager
 
         private static int _lastProcessId = 0;
 
+        /// <summary>
+        /// Creates the process with the given parameters.
+        /// </summary>
+        /// <param name="requiredCycles">The number of clock cycles this process requires to complete.</param>
+        /// <param name="priority">The priority of this process.</param>
         public Process(int requiredCycles, int priority)
         {
             RequiredCycles = requiredCycles;
