@@ -10,7 +10,7 @@ namespace ProcessManager
             var numOfProcessors = 5;
             var dispatchers = new List<IDispatcher>();
 
-            for (var i = 0; i < numOfProcessors; i++) dispatchers.Add(new FirstInFirstOutDispatcher());
+            for (var i = 0; i < numOfProcessors; i++) dispatchers.Add(new RoundRobinDispatcher((i + 1) * 2));
 
             var system = new ProcessingSystem(numOfProcessors, dispatchers);
             system.Simulate();
