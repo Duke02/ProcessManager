@@ -7,6 +7,7 @@
       <e p="ProcessManager" t="IncludeRecursive">
         <e p="Constants.cs" t="Include" />
         <e p="Dispatcher.cs" t="Include" />
+        <e p="FirstInFirstOutDispatcher.cs" t="Include" />
         <e p="Process.cs" t="Include" />
         <e p="ProcessManager.csproj" t="IncludeRecursive" />
         <e p="ProcessingSystem.cs" t="Include" />

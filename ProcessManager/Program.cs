@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProcessManager
 {
@@ -6,7 +7,9 @@ namespace ProcessManager
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var system = new ProcessingSystem(1, new List<IDispatcher>() {new FirstInFirstOutDispatcher()});
+            system.Simulate();
+            
         }
     }
 }

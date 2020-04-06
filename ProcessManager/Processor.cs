@@ -98,7 +98,7 @@ namespace ProcessManager
         /// <param name="message">The message to print to the console.</param>
         private void PrintInformation(string message)
         {
-            Console.WriteLine($"{DateTime.Now}|Processor {ProcessorId}: {message}");
+            Console.WriteLine($"Processor {ProcessorId} @ Cycle {CurrentClockCycle}: {message}");
         }
 
         /// <summary>
@@ -106,6 +106,8 @@ namespace ProcessManager
         /// </summary>
         public void Process()
         {
+            PrintInformation("Beginning cycle.");
+
             if (Dispatcher.IsPreemptive() && Dispatcher.ShouldPreempt(this, _system))
             {
                 // TODO: Make sure this doesn't make the enqueued process null again.
@@ -113,6 +115,7 @@ namespace ProcessManager
                 // TODO: Make sure this actually enqueues it.
                 GetAppropriateQueue().Enqueue(preemptedProcess);
                 CurrentlyRunningProcess = null;
+                PrintInformation("Preempted Process.");
             }
 
             if (IsIdling)
@@ -120,14 +123,19 @@ namespace ProcessManager
                 CurrentlyRunningProcess = Dispatcher.Dispatch(this, GetAppropriateQueue());
             }
 
+            Thread.Sleep(Constants.ClockPeriod);
+
+
             var processHasCompleted = CurrentlyRunningProcess != null && CurrentlyRunningProcess.Run(CurrentClockCycle);
+
 
             if (processHasCompleted)
             {
+                PrintInformation("Current process has completed.");
                 CurrentlyRunningProcess = null;
             }
 
-            Thread.Sleep(Constants.ClockPeriod);
+            PrintInformation("Completed cycle.");
 
             CurrentClockCycle += 1;
         }

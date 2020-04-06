@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace ProcessManager
@@ -53,6 +55,7 @@ namespace ProcessManager
         /// </summary>
         public void TurnOn()
         {
+            Console.WriteLine("Turning system on...");
             IsOn = true;
             foreach (var processor in Processors)
             {
@@ -64,6 +67,11 @@ namespace ProcessManager
                     }
                 }));
             }
+
+            foreach (var processorThread in _processorThreads)
+            {
+                processorThread.Start();
+            }
         }
 
         /// <summary>
@@ -71,12 +79,34 @@ namespace ProcessManager
         /// </summary>
         public void TurnOff()
         {
+            Console.WriteLine("Turning System off...");
             IsOn = false;
 
             foreach (var processorThread in _processorThreads)
             {
                 processorThread.Join();
             }
+
+            Console.WriteLine("System is off.");
+        }
+
+        public void Simulate()
+        {
+            Console.WriteLine("Beginning simulation.");
+            foreach (var processor in Processors)
+            {
+                processor.AddToLocalQueue(new Process(5, 10, 0));
+            }
+
+            TurnOn();
+
+            while (Processors.Any(processor => !processor.LocalQueue.IsEmpty))
+            {
+                Thread.Sleep(Constants.ClockPeriod);
+            }
+
+            TurnOff();
+            Console.WriteLine("Simulation has finished.");
         }
     }
 }
