@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace ProcessManager
 {
@@ -9,7 +6,7 @@ namespace ProcessManager
     {
         private int _executionStart;
 
-        private static int _lastProcessId = 0;
+        private static int _lastProcessId;
 
         /// <summary>
         /// Creates the process with the given parameters.
@@ -129,6 +126,17 @@ namespace ProcessManager
             }
 
             return HasCompleted;
+        }
+
+        /// <summary>
+        /// Calculates the statistics for this process.
+        /// </summary>
+        /// <param name="turnAroundTime">The number of cycles that this process took to get in the system and out.</param>
+        /// <param name="normalizedTurnAroundTime">turnAroundTime / Service time</param>
+        public void CalculateStatistics(out int turnAroundTime, out float normalizedTurnAroundTime)
+        {
+            turnAroundTime = ExecutionEnd - ExecutionStart;
+            normalizedTurnAroundTime = turnAroundTime / (float) RequiredCycles;
         }
     }
 }
