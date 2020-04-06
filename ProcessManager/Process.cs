@@ -28,8 +28,7 @@ namespace ProcessManager
         }
 
         /// <summary>
-        /// <summary>
-        /// The number of clock cycles HasCthat are required for this process to complete.
+        /// The number of clock cycles that are required for this process to complete.
         /// </summary>
         public int RequiredCycles { get; }
 
