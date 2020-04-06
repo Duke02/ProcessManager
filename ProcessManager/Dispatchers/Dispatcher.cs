@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 
-namespace ProcessManager
+namespace ProcessManager.Dispatchers
 {
     public interface IDispatcher
     {

@@ -1,33 +1,33 @@
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using ProcessManager.Dispatchers;
 
 namespace ProcessManager
 {
     /// <summary>
-    /// An object that operates on processes and is a part of a system.
-    /// A real world example of this class would be a core of a CPU, a CPU, or a computer in a distributed system.
+    ///     An object that operates on processes and is a part of a system.
+    ///     A real world example of this class would be a core of a CPU, a CPU, or a computer in a distributed system.
     /// </summary>
     public class Processor
     {
+        private static int _lastId;
+
         /// <summary>
-        /// The system this processor belongs to.
+        ///     The system this processor belongs to.
         /// </summary>
         private readonly ProcessingSystem _system;
 
-        private static int _lastId = 0;
-
         /// <summary>
-        /// Field that holds the tabs to print debug information in a nicely formatted way.
+        ///     Field that holds the tabs to print debug information in a nicely formatted way.
         /// </summary>
         private readonly string _tabs;
 
         /// <summary>
-        /// Creates the processor with the given parameters.
+        ///     Creates the processor with the given parameters.
         /// </summary>
         /// <param name="dispatcher">The algorithm this processor will use to choose the next process to run.</param>
         /// <param name="system">The system that this processor is a part of.</param>
@@ -48,42 +48,42 @@ namespace ProcessManager
         }
 
         /// <summary>
-        /// The algorithm that this processor uses to select the next process to run.
+        ///     The algorithm that this processor uses to select the next process to run.
         /// </summary>
         public IDispatcher Dispatcher { get; }
 
         /// <summary>
-        /// The local queue of ready processes that this processor can select from to run.
+        ///     The local queue of ready processes that this processor can select from to run.
         /// </summary>
         public ConcurrentQueue<Process> LocalQueue { get; private set; }
 
         /// <summary>
-        /// The currently running process on this processor.
+        ///     The currently running process on this processor.
         /// </summary>
         public Process CurrentlyRunningProcess { get; private set; }
 
         /// <summary>
-        /// The identification number of this processor.
+        ///     The identification number of this processor.
         /// </summary>
         public int ProcessorId { get; }
 
         /// <summary>
-        /// True if there is no currently running process, False otherwise.
+        ///     True if there is no currently running process, False otherwise.
         /// </summary>
         public bool IsIdling => CurrentlyRunningProcess == null;
 
         /// <summary>
-        /// The current clock cycle of this processor.
+        ///     The current clock cycle of this processor.
         /// </summary>
         public int CurrentClockCycle { get; private set; }
 
         /// <summary>
-        /// True if the queue is empty and the processor is idling, False otherwise.
+        ///     True if the queue is empty and the processor is idling, False otherwise.
         /// </summary>
         public bool IsDone => GetAppropriateQueue().IsEmpty && IsIdling;
 
         /// <summary>
-        /// Gets the queue that new processes are to come from.
+        ///     Gets the queue that new processes are to come from.
         /// </summary>
         /// <returns></returns>
         private ConcurrentQueue<Process> GetAppropriateQueue()
@@ -95,7 +95,7 @@ namespace ProcessManager
         }
 
         /// <summary>
-        /// Adds to the queue and orders it.
+        ///     Adds to the queue and orders it.
         /// </summary>
         /// <param name="process">The process to be added to the queue.</param>
         public void AddToLocalQueue(Process process)
@@ -105,21 +105,18 @@ namespace ProcessManager
         }
 
         /// <summary>
-        /// Adds all of the given processes to the local queue.
+        ///     Adds all of the given processes to the local queue.
         /// </summary>
         /// <param name="processes">The processes to add.</param>
         public void AddToLocalQueue(IEnumerable<Process> processes)
         {
-            foreach (var process in processes)
-            {
-                LocalQueue.Enqueue(process);
-            }
+            foreach (var process in processes) LocalQueue.Enqueue(process);
 
             SortTheQueue();
         }
 
         /// <summary>
-        /// Sorts the local queue.
+        ///     Sorts the local queue.
         /// </summary>
         public void SortTheQueue()
         {
@@ -127,7 +124,7 @@ namespace ProcessManager
         }
 
         /// <summary>
-        /// Prints a message to the console using the given message.
+        ///     Prints a message to the console using the given message.
         /// </summary>
         /// <param name="message">The message to print to the console.</param>
         private void PrintInformation(string message)
@@ -136,7 +133,7 @@ namespace ProcessManager
         }
 
         /// <summary>
-        /// Gets the process to run and allows it to run.
+        ///     Gets the process to run and allows it to run.
         /// </summary>
         public void Process()
         {
