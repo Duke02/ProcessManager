@@ -24,6 +24,8 @@ namespace ProcessManager
         /// <param name="dispatchers">The dispatchers that the processors are to use. Length can be less than the number of processors.</param>
         public ProcessingSystem(int numOfProcessors, List<IDispatcher> dispatchers)
         {
+            ProcessProducer = new Producer(new Random().Next(20, 40) * numOfProcessors);
+
             Processors = new List<Processor>(numOfProcessors);
             _processorThreads = new List<Thread>(numOfProcessors);
 
@@ -34,6 +36,8 @@ namespace ProcessManager
 
             GlobalQueue = new ConcurrentQueue<Process>();
         }
+
+        public Producer ProcessProducer { get; }
 
         /// <summary>
         /// The processors in the system.
@@ -90,16 +94,45 @@ namespace ProcessManager
             Console.WriteLine("System is off.");
         }
 
+        private void AddProcessesToProcessors(int numToAddPerProcessor)
+        {
+            foreach (var processor in Processors)
+            {
+                if (ProcessProducer.CanProduce(numToAddPerProcessor))
+                {
+                    processor.AddToLocalQueue(ProcessProducer.ProduceProcesses(numToAddPerProcessor, 0));
+                }
+                else if (ProcessProducer.IsDoneProducing)
+                {
+                    break;
+                }
+                else
+                {
+                    var producerCanProduce = ProcessProducer.ProcessesCanProduce;
+                    processor.AddToLocalQueue(ProcessProducer.ProduceProcesses(producerCanProduce, 0));
+                }
+            }
+        }
+
         public void Simulate()
         {
             Console.WriteLine("Beginning simulation.");
-            foreach (var processor in Processors)
-            {
-                processor.AddToLocalQueue(new Process(5, 10, 0));
-            }
+
+            AddProcessesToProcessors(5);
 
             TurnOn();
 
+            // Wait until producer cannot create any more processes for processors.
+            while (!ProcessProducer.IsDoneProducing)
+            {
+                Thread.Sleep(Constants.ClockPeriod);
+                if (Processors.Any(processor => processor.IsIdling))
+                {
+                    AddProcessesToProcessors(5);
+                }
+            }
+
+            // Wait until all processors are done.
             while (Processors.Any(processor => !processor.IsDone))
             {
                 Thread.Sleep(Constants.ClockPeriod);

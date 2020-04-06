@@ -12,6 +12,7 @@
         <e p="ProcessManager.csproj" t="IncludeRecursive" />
         <e p="ProcessingSystem.cs" t="Include" />
         <e p="Processor.cs" t="Include" />
+        <e p="Producer.cs" t="Include" />
         <e p="Program.cs" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="obj" t="ExcludeRecursive">

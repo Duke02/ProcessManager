@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
@@ -89,6 +91,23 @@ namespace ProcessManager
             SortTheQueue();
         }
 
+        /// <summary>
+        /// Adds all of the given processes to the local queue.
+        /// </summary>
+        /// <param name="processes">The processes to add.</param>
+        public void AddToLocalQueue(IEnumerable<Process> processes)
+        {
+            foreach (var process in processes)
+            {
+                LocalQueue.Enqueue(process);
+            }
+
+            SortTheQueue();
+        }
+
+        /// <summary>
+        /// Sorts the local queue.
+        /// </summary>
         public void SortTheQueue()
         {
             LocalQueue = new ConcurrentQueue<Process>(LocalQueue.OrderBy(Dispatcher.GetQueueOrder()));
