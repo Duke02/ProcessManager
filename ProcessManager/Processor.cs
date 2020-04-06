@@ -173,9 +173,7 @@ namespace ProcessManager
 
             if (Dispatcher.IsPreemptive() && Dispatcher.ShouldPreempt(this, _system))
             {
-                // TODO: Make sure this doesn't make the enqueued process null again.
                 var preemptedProcess = CurrentlyRunningProcess;
-                // TODO: Make sure this actually enqueues it.
                 GetAppropriateQueue().Enqueue(preemptedProcess);
                 CurrentlyRunningProcess = null;
                 PrintInformation("Preempted Process.");
