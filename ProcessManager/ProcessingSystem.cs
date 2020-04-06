@@ -31,7 +31,7 @@ namespace ProcessManager
 
             for (var i = 0; i < numOfProcessors; i++)
             {
-                Processors.Add(new Processor(dispatchers[i % dispatchers.Capacity], this));
+                Processors.Add(new Processor(dispatchers[i], this));
             }
 
             GlobalQueue = new ConcurrentQueue<Process>();
@@ -131,6 +131,8 @@ namespace ProcessManager
                     AddProcessesToProcessors(5);
                 }
             }
+
+            Console.WriteLine("Waiting until processors are finished with current tasks.");
 
             // Wait until all processors are done.
             while (Processors.Any(processor => !processor.IsDone))

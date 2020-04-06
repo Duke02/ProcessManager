@@ -7,9 +7,16 @@ namespace ProcessManager
     {
         static void Main(string[] args)
         {
-            var system = new ProcessingSystem(1, new List<IDispatcher>() {new FirstInFirstOutDispatcher()});
+            var numOfProcessors = 5;
+            var dispatchers = new List<IDispatcher>();
+
+            for (var i = 0; i < numOfProcessors; i++)
+            {
+                dispatchers.Add(new FirstInFirstOutDispatcher());
+            }
+
+            var system = new ProcessingSystem(numOfProcessors, dispatchers);
             system.Simulate();
-            
         }
     }
 }
