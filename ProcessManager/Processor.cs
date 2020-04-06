@@ -16,6 +16,8 @@ namespace ProcessManager
     {
         private static int _lastId;
 
+        private readonly List<ProcessStatistics> _statisticHistory;
+
         /// <summary>
         ///     The system this processor belongs to.
         /// </summary>
@@ -45,6 +47,9 @@ namespace ProcessManager
 
             LocalQueue = new ConcurrentQueue<Process>();
             CurrentClockCycle = 0;
+
+            ProcessesSeen = 0;
+            _statisticHistory = new List<ProcessStatistics>();
         }
 
         /// <summary>
@@ -68,6 +73,11 @@ namespace ProcessManager
         public int ProcessorId { get; }
 
         /// <summary>
+        ///     The total number of processes that this processor has seen.
+        /// </summary>
+        public int ProcessesSeen { get; private set; }
+
+        /// <summary>
         ///     True if there is no currently running process, False otherwise.
         /// </summary>
         public bool IsIdling => CurrentlyRunningProcess == null;
@@ -81,6 +91,27 @@ namespace ProcessManager
         ///     True if the queue is empty and the processor is idling, False otherwise.
         /// </summary>
         public bool IsDone => GetAppropriateQueue().IsEmpty && IsIdling;
+
+        /// <summary>
+        ///     The average turnaround time that the processor has seen.
+        /// </summary>
+        public double AverageTurnaroundTime => _statisticHistory.Average(stat => stat.TurnaroundTime);
+
+        /// <summary>
+        ///     The average normalized turnaround time that the processor has seen.
+        /// </summary>
+        public double AverageNormalizedTurnaroundTime =>
+            _statisticHistory.Average(stat => stat.NormalizedTurnaroundTime);
+
+        /// <summary>
+        ///     The average service time each process on this processor required to take to complete.
+        /// </summary>
+        public double AverageServiceTime => _statisticHistory.Average(stat => stat.ServiceTime);
+
+        /// <summary>
+        ///     The average cycles that each process on the processor spent waiting.
+        /// </summary>
+        public double AverageWaitCycles => _statisticHistory.Average(stat => stat.TotalWaitTime);
 
         /// <summary>
         ///     Gets the queue that new processes are to come from.
@@ -164,12 +195,77 @@ namespace ProcessManager
             if (processHasCompleted)
             {
                 PrintInformation("Current process has completed.");
+
+                ProcessesSeen++;
+                CurrentlyRunningProcess.CalculateStatistics(out var processStats);
+                _statisticHistory.Add(processStats);
+
                 CurrentlyRunningProcess = null;
             }
 
             PrintInformation("Completed cycle.");
 
             CurrentClockCycle += 1;
+        }
+
+        public ProcessorStatistics CalculateStatistics()
+        {
+            return new ProcessorStatistics
+            {
+                AverageServiceTime = AverageServiceTime,
+                ProcessorId = ProcessorId,
+                TotalProcessesSeen = ProcessesSeen,
+                AverageTurnaroundTime = AverageTurnaroundTime,
+                AverageWaitCycles = AverageWaitCycles,
+                AverageNormalizedTurnaroundTime = AverageNormalizedTurnaroundTime,
+                TotalClockCycles = CurrentClockCycle
+            };
+        }
+    }
+
+    public struct ProcessorStatistics
+    {
+        /// <summary>
+        ///     The id for the processor that these statistics correspond with.
+        /// </summary>
+        public int ProcessorId;
+
+        /// <summary>
+        ///     The total number of processes the processor has seen.
+        /// </summary>
+        public int TotalProcessesSeen;
+
+        /// <summary>
+        ///     The average turnaround time for each process to enter and leave the system on the processor.
+        /// </summary>
+        public double AverageTurnaroundTime;
+
+        /// <summary>
+        ///     The average normalized turnaround time for each process on the processor.
+        /// </summary>
+        public double AverageNormalizedTurnaroundTime;
+
+        /// <summary>
+        ///     The average number of cycles the processes on the processor took waiting.
+        /// </summary>
+        public double AverageWaitCycles;
+
+        /// <summary>
+        ///     The average number of cycles the processes on the processor required to complete.
+        /// </summary>
+        public double AverageServiceTime;
+
+        public int TotalClockCycles;
+
+        public override string ToString()
+        {
+            return $"Processor {ProcessorId} had the following statistics:" +
+                   $"\n\t{TotalClockCycles} total clock cycles" +
+                   $"\n\t{TotalProcessesSeen} total processes seen" +
+                   $"\n\t{AverageTurnaroundTime} average turnaround time" +
+                   $"\n\t{AverageNormalizedTurnaroundTime} average normalized time" +
+                   $"\n\t{AverageServiceTime} average service time" +
+                   $"\n\t{AverageWaitCycles} average wait cycles";
         }
     }
 }

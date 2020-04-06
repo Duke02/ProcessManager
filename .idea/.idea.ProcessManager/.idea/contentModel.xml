@@ -13,6 +13,7 @@
         </e>
         <e p="Process.cs" t="Include" />
         <e p="ProcessManager.csproj" t="IncludeRecursive" />
+        <e p="ProcessStatistics.cs" t="Include" />
         <e p="ProcessingSystem.cs" t="Include" />
         <e p="Processor.cs" t="Include" />
         <e p="Producer.cs" t="Include" />

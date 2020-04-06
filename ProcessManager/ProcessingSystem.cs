@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using ProcessManager.Dispatchers;
 
@@ -134,6 +135,44 @@ namespace ProcessManager
 
             TurnOff();
             Console.WriteLine("Simulation has finished.");
+
+            PrintStatistics();
+        }
+
+        private void PrintStatistics()
+        {
+            Console.WriteLine("Calculating Statistics...");
+
+            var processorStats = Processors.Select(processor => processor.CalculateStatistics()).ToList();
+
+            foreach (var stat in processorStats) Console.WriteLine($"\n{stat.ToString()}\n");
+
+            var sumOfTotalClockCycles = processorStats.Sum(processor => processor.TotalClockCycles);
+
+            var averageClockCycles = processorStats.Average(processor => processor.TotalClockCycles);
+            var totalProcessesSeen = processorStats.Sum(processor => processor.TotalProcessesSeen);
+            var averageTurnaroundTime =
+                processorStats.Sum(processor => processor.AverageTurnaroundTime * processor.TotalClockCycles) /
+                sumOfTotalClockCycles;
+            var averageNTat =
+                processorStats.Sum(processor =>
+                    processor.AverageNormalizedTurnaroundTime * processor.TotalClockCycles) / sumOfTotalClockCycles;
+            var averageWaitCycles = processorStats.Sum(stat => stat.AverageWaitCycles * stat.TotalClockCycles) /
+                                    sumOfTotalClockCycles;
+            var averageServiceTime = processorStats.Sum(stat => stat.AverageServiceTime * stat.TotalClockCycles) /
+                                     sumOfTotalClockCycles;
+
+            var sb = new StringBuilder();
+            sb.Append('=', 25);
+            Console.WriteLine(sb.ToString());
+
+            Console.WriteLine($"System with {Processors.Count} processors encountered the following statistics.");
+            Console.WriteLine($"Total Processes Seen: {totalProcessesSeen}");
+            Console.WriteLine($"Average Clock Cycles: {averageClockCycles}");
+            Console.WriteLine($"Average Service Time: {averageServiceTime}");
+            Console.WriteLine($"Average Turnaround Time: {averageTurnaroundTime}");
+            Console.WriteLine($"Average Normalized Turnaround Time: {averageNTat}");
+            Console.WriteLine($"Average Wait Cycles: {averageWaitCycles}");
         }
     }
 }
