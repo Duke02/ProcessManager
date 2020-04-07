@@ -170,7 +170,6 @@ namespace ProcessManager
         {
             PrintInformation("Beginning cycle.");
 
-
             if (Dispatcher.IsPreemptive() && Dispatcher.ShouldPreempt(this, _system))
             {
                 var preemptedProcess = CurrentlyRunningProcess;
@@ -187,11 +186,9 @@ namespace ProcessManager
 
             Thread.Sleep(Constants.ClockPeriod);
 
-
             var processHasCompleted = CurrentlyRunningProcess != null && CurrentlyRunningProcess.Run(CurrentClockCycle);
 
             Dispatcher.UpdateOnClockCycle();
-
 
             if (processHasCompleted)
             {

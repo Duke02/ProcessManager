@@ -10,6 +10,7 @@
           <e p="Dispatcher.cs" t="Include" />
           <e p="FirstInFirstOutDispatcher.cs" t="Include" />
           <e p="RoundRobinDispatcher.cs" t="Include" />
+          <e p="ShortestProcessNextDispatcher.cs" t="Include" />
         </e>
         <e p="Process.cs" t="Include" />
         <e p="ProcessManager.csproj" t="IncludeRecursive" />
