@@ -110,6 +110,33 @@ namespace ProcessManager
                 }
         }
 
+        private void AddProcessesToIdleProcessors(int numToAdd)
+        {
+            var processors = Processors;
+            var idlingProcessors = processors.Where(processor => processor.IsIdling);
+            var idlingProcessorsAsList = idlingProcessors.ToList();
+            foreach (var processor in idlingProcessorsAsList)
+            {
+                if (ProcessProducer.CanProduce(numToAdd))
+                {
+                    processor.AddToLocalQueue(ProcessProducer.ProduceProcesses(numToAdd, processor.CurrentClockCycle));
+                }
+                else if (!ProcessProducer.IsDoneProducing)
+                {
+                    var leftoverProcesses = ProcessProducer.ProcessesCanProduce;
+                    processor.AddToLocalQueue(
+                        ProcessProducer.ProduceProcesses(leftoverProcesses, processor.CurrentClockCycle));
+                }
+                else if (ProcessProducer.IsDoneProducing)
+                {
+                    break;
+                }
+            }
+
+            Processors.RemoveAll(processor => processor.IsIdling);
+            Processors.AddRange(idlingProcessorsAsList);
+        }
+
         /// <summary>
         ///     Simulates a real world computing environment.
         /// </summary>
@@ -125,7 +152,7 @@ namespace ProcessManager
             while (!ProcessProducer.IsDoneProducing)
             {
                 Thread.Sleep(Constants.ClockPeriod);
-                if (Processors.Any(processor => processor.IsIdling)) AddProcessesToProcessors(5);
+                if (Processors.Any(processor => processor.IsIdling)) AddProcessesToIdleProcessors(5);
             }
 
             Console.WriteLine("Waiting until processors are finished with current tasks.");

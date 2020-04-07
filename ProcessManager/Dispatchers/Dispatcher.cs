@@ -6,6 +6,11 @@ namespace ProcessManager.Dispatchers
     public interface IDispatcher
     {
         /// <summary>
+        /// The name of the dispatcher.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
         /// True if this Dispatcher takes processes out of their running state, False otherwise.
         /// </summary>
         /// <returns></returns>
