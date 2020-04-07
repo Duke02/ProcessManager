@@ -89,6 +89,8 @@ namespace ProcessManager
         /// </summary>
         public bool HasCompleted => TotalExecution >= RequiredCycles;
 
+        public int CyclesRemaining => RequiredCycles - TotalExecution;
+
         /// <summary>
         ///     The last clock cycle that this process executed.
         /// </summary>
@@ -115,7 +117,10 @@ namespace ProcessManager
             if (BeganExecution)
                 TotalWait += currentClockCycle - LastExecutionCycle - 1;
             else
+            {
                 ExecutionStart = currentClockCycle;
+                TotalWait = currentClockCycle - AdmittedClockCycle - 1;
+            }
 
             LastExecutionCycle = currentClockCycle;
             TotalExecution += 1;
