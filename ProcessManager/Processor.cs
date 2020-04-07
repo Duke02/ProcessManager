@@ -216,7 +216,8 @@ namespace ProcessManager
                 AverageTurnaroundTime = AverageTurnaroundTime,
                 AverageWaitCycles = AverageWaitCycles,
                 AverageNormalizedTurnaroundTime = AverageNormalizedTurnaroundTime,
-                TotalClockCycles = CurrentClockCycle
+                TotalClockCycles = CurrentClockCycle,
+                DispatcherName = Dispatcher.Name
             };
         }
     }
@@ -255,9 +256,14 @@ namespace ProcessManager
 
         public int TotalClockCycles;
 
+        /// <summary>
+        /// The name of the dispatcher this processor used.
+        /// </summary>
+        public string DispatcherName;
+
         public override string ToString()
         {
-            return $"Processor {ProcessorId} had the following statistics:" +
+            return $"Processor {ProcessorId} with dispatcher {DispatcherName} had the following statistics:" +
                    $"\n\t{TotalClockCycles} total clock cycles" +
                    $"\n\t{TotalProcessesSeen} total processes seen" +
                    $"\n\t{AverageTurnaroundTime} average turnaround time" +

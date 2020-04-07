@@ -29,5 +29,7 @@ namespace ProcessManager.Dispatchers
         public void UpdateOnClockCycle()
         {
         }
+
+        public string Name => "Shortest Process Next";
     }
 }

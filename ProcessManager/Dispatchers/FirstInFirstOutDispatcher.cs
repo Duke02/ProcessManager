@@ -44,5 +44,7 @@ namespace ProcessManager.Dispatchers
         public void UpdateOnClockCycle()
         {
         }
+
+        public string Name => "First In First Out";
     }
 }

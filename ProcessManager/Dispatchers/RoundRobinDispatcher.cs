@@ -61,5 +61,7 @@ namespace ProcessManager.Dispatchers
         {
             _runningStreak++;
         }
+
+        public string Name => $"Round Robin (TQ: {TimeQuantum})";
     }
 }
